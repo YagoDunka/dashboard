@@ -1,16 +1,36 @@
-from flask import Flask
-import numpy as np
+import dash
+from dash import html, dcc 
+import plotly.express as px
+import dash_bootstrap_components as dbc
+import pandas as pd
+import seaborn as sns
 
-app = Flask(__name__)
+dataset = sns.load_dataset('iris')
 
-lista = np.array([1, 4, 7, 10, 34, 23, 4, 6, 2])
+app = dash.Dash(__name__,
+                external_stylesheets=[dbc.themes.SUPERHERO])
 
-idx = np.where(lista < 7)
+sepal_fig = px.scatter(dataset,
+                       x='sepal_length',
+                       y='sepal_width',
+                       color='species',
+                       title='Sépala',
+                       template='plotly_dark')
 
-@app.route('/')
+petal_fig = px.scatter(dataset,
+                          x='petal_length',
+                          y='petal_width',
+                          color='species',
+                          title='Pétala',
+                          template='plotly_dark')
 
-def home():
-    return str(lista[idx])
+app.layout = html.Div(children=[
+    html.H1('Visualização do Dataset Iris'),
+    html.Div([
+        dcc.Graph(figure=sepal_fig),
+        dcc.Graph(figure=petal_fig)
+    ], style={'display': 'flex'})
+])
 
 if __name__ == '__main__':
-    app.run()
+    app.run_server(debug=True)
