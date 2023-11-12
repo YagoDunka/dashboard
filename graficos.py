@@ -7,6 +7,7 @@ pluvio = pd.read_csv('pluvio_out.csv',
                         parse_dates=[0],
                         date_format='%d/%m/%Y-%H:%M:%S')
 
+
 # Ajustar as datas e dividir o daaframe
 pluvio_dia = pluvio.resample('1D', on='Data').sum()
 
