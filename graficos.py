@@ -32,14 +32,9 @@ tweets = pd.read_csv('tweets_out.csv',
                         parse_dates=[1],
                         date_format='%Y-%m-%d %H:%M:%S')
 
-
-
-import pandas as pd
-import plotly.express as px
-import preprocessamento
 # Limpar e corrigir as datas
 tweets.drop_duplicates(subset=['id'], inplace=True, keep='last')
-tweets.reset_index(drop=True, drop=True)
+tweets.reset_index(inplace=True, drop=True)
 
 tweets['data'] = tweets['data'].dt.date
 
@@ -55,5 +50,5 @@ figura3.update_layout(title='Incidência de tags nos tweets por dia',
                       yaxis_title='',
                       xaxis_title='',
                       template='plotly_dark')
-
 figura3.update_legends(title='')
+
