@@ -8,7 +8,7 @@ pluvio = pd.read_csv('pluvio_out.csv',
                         date_format='%d/%m/%Y-%H:%M:%S')
 
 
-# Ajustar as datas e dividir o daaframe
+# Ajustar as datas e dividir o dataframe
 pluvio_dia = pluvio.resample('1D', on='Data').sum()
 
 pluvio_blumenau = pluvio_dia.iloc[:, -1:]

@@ -33,11 +33,13 @@ app.layout = dbc.Container([
 
     dbc.Row([ #Terceira linha
         dbc.Col([ #Primeira coluna
-              dcc.Graph(figure=graficos.figura2)
-        ], width=4),
+              dcc.Dropdown(id='menu', value=['Glória','Velha Central', 'Itoupavazinha','Vorstadt'],
+                           multi=True, options=[{'label':x, 'value':x} for x in graficos.pluvio_estacoes.columns]),
+              dcc.Graph(id='grafico')
+        ], width=6),
         dbc.Col([ #Segunda coluna
             dcc.Graph(figure=graficos.figura3)
-        ], width={'size': 8})
+        ], width={'size': 6})
     ], class_name='g-0'),
 
     dbc.Row([ #Quarta linha
@@ -46,6 +48,23 @@ app.layout = dbc.Container([
         ])
     ])
 ])
+
+# Callbacks
+@app.callback(
+    Output('grafico', 'figure'),
+    Input('menu', 'value')
+)
+
+def funcao(acoes):
+    data_fig = px.line(graficos.pluvio_estacoes[acoes])
+    fig = (data_fig)
+    fig.update_layout(title='Índice Pluviométrico por Estação',
+                        yaxis_title='',
+                        xaxis_title='',
+                        template='plotly_dark',
+                        showlegend=False)
+    return fig
+
 
 # Execução do aplicação
 if __name__ == '__main__':
