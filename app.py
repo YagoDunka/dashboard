@@ -1,16 +1,52 @@
-from flask import Flask
-import numpy as np
+import dash
+from dash import dcc, html
+import plotly.express as px
+import plotly.graph_objects as go
+import dash_bootstrap_components as dbc
+from dash.dependencies import Input, Output, State
+import pandas as pd
+import preprocessamento
+import graficos
 
-app = Flask(__name__)
+# Inicialização da aplicação
 
-lista = np.array([1, 4, 7, 10, 34, 23, 4, 6, 2])
+app = dash.Dash(__name__, 
+                external_stylesheets=[dbc.themes.CYBORG])
 
-idx = np.where(lista < 7)
+#Layout do dashboard
 
-@app.route('/')
+app.layout = dbc.Container([
 
-def home():
-    return str(lista[idx])
+    dbc.Row([ #Primeira linha
+        dbc.Col([
+            html.H1('Dashboard Monitoramento de Chuvas',
+                    className= 'text-center text-primary'),
+            html.Br()
+        ])
+    ]),
 
+    dbc.Row([ #Segunda linha
+        dbc.Col([
+            dcc.Graph(figure=graficos.figura1)
+        ])
+    ]),
+
+    dbc.Row([ #Terceira linha
+        dbc.Col([ #Primeira coluna
+              dcc.Graph(figure=graficos.figura2)
+        ], width=4),
+        dbc.Col([ #Segunda coluna
+            dcc.Graph(figure=graficos.figura3)
+        ], width={'size': 8})
+    ], class_name='g-0'),
+
+    dbc.Row([ #Quarta linha
+        dbc.Col([
+            dcc.Graph(figure=graficos.figura3)
+        ])
+    ])
+])
+
+# Execução do aplicação
 if __name__ == '__main__':
-    app.run()
+    app.run_server(debug=True)
