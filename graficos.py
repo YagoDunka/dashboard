@@ -1,12 +1,12 @@
 import pandas as pd
 import plotly.express as px
 import preprocessamento
+import plotly.graph_objects as go
 
 # Ler o arquivo
 pluvio = pd.read_csv('pluvio_out.csv',
                         parse_dates=[0],
                         date_format='%d/%m/%Y-%H:%M:%S')
-
 
 # Ajustar as datas e dividir o dataframe
 pluvio_dia = pluvio.resample('1D', on='Data').sum()
@@ -53,3 +53,23 @@ figura3.update_layout(title='Incidência de tags nos tweets por dia',
                       template='plotly_dark')
 figura3.update_legends(title='')
 
+
+prob_dia = pd.read_csv('probabilidade.csv', index_col=0)
+graf1 = go.Bar(x=prob_dia.index, 
+               y=prob_dia.values.flatten(),
+               name='Probabilidade dos Tweets',
+               yaxis='y1',
+               opacity=0.5)
+
+graf2 = go.Scatter(x=pluvio_blumenau.index,
+                   y=pluvio_blumenau.values.flatten(),
+                   name='Índice Pluviométrico',
+                   yaxis='y2',
+                   mode='lines+markers')
+
+layout = go.Layout(title='Probabilidade de Tweets sobre Enchente',
+                   yaxis1=dict(title='Probabilidade', side = 'left'),
+                   yaxis2=dict(title='Índice Pluviométrico', side = 'right', overlaying='y', showgrid=False),
+                   template='plotly_dark')
+
+figura4 = go.Figure(data=[graf1, graf2], layout=layout)
