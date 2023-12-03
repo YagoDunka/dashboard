@@ -46,6 +46,12 @@ app.layout = dbc.Container([
         dbc.Col([
             dcc.Graph(figure=graficos.figura4)
         ])
+    ]),
+
+    dbc.Row([ #Quinta linha 
+        dbc.Col([
+            dcc.Graph(figure=graficos.figura5)
+        ])
     ])
 ])
 
