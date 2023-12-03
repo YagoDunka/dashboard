@@ -1,12 +1,13 @@
 import pandas as pd
 import plotly.express as px
 import preprocessamento
+import plotly.graph_objects as go
+from datetime import datetime
 
 # Ler o arquivo
 pluvio = pd.read_csv('pluvio_out.csv',
                         parse_dates=[0],
                         date_format='%d/%m/%Y-%H:%M:%S')
-
 
 # Ajustar as datas e dividir o dataframe
 pluvio_dia = pluvio.resample('1D', on='Data').sum()
@@ -53,3 +54,63 @@ figura3.update_layout(title='Incidência de tags nos tweets por dia',
                       template='plotly_dark')
 figura3.update_legends(title='')
 
+# Ler o arquivo com as probabilidades
+prob_dia = pd.read_csv('probabilidade.csv', index_col=0)
+
+# Construir o gráfico 4 com as probabilidades e o índice pluviométrico
+
+graf1 = go.Bar(x=prob_dia.index, 
+               y=prob_dia.values.flatten(),
+               name='Probabilidade dos Tweets',
+               yaxis='y1',
+               opacity=0.5)
+
+graf2 = go.Scatter(x=pluvio_blumenau.index,
+                   y=pluvio_blumenau.values.flatten(),
+                   name='Índice Pluviométrico',
+                   yaxis='y2',
+                   mode='lines+markers')
+
+# Layout do gráfico para figura 4
+layout1 = go.Layout(title='Probabilidade de Tweets sobre Enchente',
+                   yaxis1=dict(title='Probabilidade', side = 'left'),
+                   yaxis2=dict(title='Índice Pluviométrico', side = 'right', overlaying='y', showgrid=False),
+                   template='plotly_dark')
+
+figura4 = go.Figure(data=[graf1, graf2], layout=layout1)
+
+# Figura 5 com as datas das enchentes
+
+enchentes = ['2023-10-05', '2023-10-09', '2023-10-12', '2023-10-29']
+date_enchentes = [datetime.strptime(x, '%Y-%m-%d') for x in enchentes]
+
+graf3 = go.Scatter(x=prob_dia.index, 
+                   y=prob_dia.values.flatten(),
+                   name='Probabilidade dos Tweets',
+                   yaxis='y3',
+                   mode='lines+markers',
+                   showlegend=True)
+
+layout2 = go.Layout(title='Probabilidade de Tweets sobre Enchente com as datas das enchentes',
+                   yaxis3=dict(title='Probabilidade', side='left'),
+                   yaxis4=dict(title='Data das Enchentes', side='right', overlaying='y', showgrid=False),
+                   template='plotly_dark')
+
+figura5 = go.Figure(data=[graf3], layout=layout2)
+
+# Adicionar linhas verticais para indicar as datas das enchentes na figura5
+for date_enchente in date_enchentes:
+    figura5.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=date_enchente,
+            x1=date_enchente,
+            y0=0,
+            y1=1,
+            xref='x',
+            yref='paper',
+            line=dict(color='red', width=2, dash='dash'),
+            name=date_enchente.strftime('%d/%m/%Y'),
+            showlegend=True
+        )
+    )

@@ -38,13 +38,19 @@ app.layout = dbc.Container([
               dcc.Graph(id='grafico')
         ], width=6),
         dbc.Col([ #Segunda coluna
-            dcc.Graph(figure=graficos.figura3)
-        ], width={'size': 6})
-    ], class_name='g-0'),
+            dcc.Graph(figure=graficos.figura3, style={'height': '100%'})
+        ])
+    ], class_name='g-0', style={'height': 'auto'}),
 
     dbc.Row([ #Quarta linha
         dbc.Col([
-            dcc.Graph(figure=graficos.figura3)
+            dcc.Graph(figure=graficos.figura4)
+        ])
+    ]),
+
+    dbc.Row([ #Quinta linha 
+        dbc.Col([
+            dcc.Graph(figure=graficos.figura5)
         ])
     ])
 ])
